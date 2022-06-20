@@ -1,15 +1,28 @@
 import org.jetbrains.compose.compose
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
+import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
     kotlin("multiplatform")
     id("org.jetbrains.compose")
+    id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
 }
 
 repositories {
     mavenCentral()
     maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
     google()
+}
+
+allprojects {
+    repositories { mavenCentral() }
+    apply(plugin = "org.jlleitschuh.gradle.ktlint")
+    ktlint {
+        android.set(false)
+        outputColorName.set("RED")
+        disabledRules.set(listOf("import-ordering", "no-wildcard-imports"))
+        reporters { reporter(ReporterType.CHECKSTYLE) }
+    }
 }
 
 kotlin {
