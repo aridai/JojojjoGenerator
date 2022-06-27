@@ -1,30 +1,29 @@
 package net.aridai.jojojjogenerator
 
-import androidx.compose.runtime.*
-import org.jetbrains.compose.web.dom.Button
+import androidx.compose.runtime.DisposableEffect
+import org.jetbrains.compose.web.css.*
 import org.jetbrains.compose.web.dom.Div
-import org.jetbrains.compose.web.dom.Text
 import org.jetbrains.compose.web.renderComposable
 
 fun main() {
-    renderComposable(rootElementId = "root") {
-        Body()
-    }
-}
+    val bloc = GeneratorBloc()
 
-@Composable
-fun Body() {
-    var counter by remember { mutableStateOf(0) }
-    Div {
-        Text("Clicked: $counter")
-    }
-    Button(
-        attrs = {
-            onClick { _ ->
-                counter++
-            }
+    renderComposable(rootElementId = "root") {
+        DisposableEffect(Unit) { onDispose { bloc.dispose() } }
+
+        Div(
+            attrs = {
+                classes("container")
+                style {
+                    width(100.vw)
+                    display(DisplayStyle.Flex)
+                    flexFlow(FlexDirection.Column, FlexWrap.Nowrap)
+                    alignItems(AlignItems.Center)
+                    justifyContent(JustifyContent.Center)
+                }
+            },
+        ) {
+            GeneratorPage(bloc = bloc)
         }
-    ) {
-        Text("Click")
     }
 }
